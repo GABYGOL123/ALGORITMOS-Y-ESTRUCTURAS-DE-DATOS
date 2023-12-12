@@ -1,0 +1,70 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+class MaxPriorityHeap{
+public : 
+vector<int>v;
+void insert(int n);
+void remove();
+int extractMax();
+void print();
+void swap(int x, int y);
+};
+void MaxPriorityHeap::swap(int x, int y){
+  int temp = v[x];
+  v[x] = v[y];
+  v[y] = temp;
+}
+void MaxPriorityHeap::remove(){
+  if(v.size()>=1)
+  {
+    int pos = v.size()-1;
+    v[0] = v[pos];
+    v.pop_back();
+    int i=0;
+    while(2*i+1<=v.size()-1 && (v[i]<v[2*i+1] || (2*i+2<=v.size()-1 && v[i]<v[2*i+2])))
+    {
+      if(2*i+2<=v.size()-1)
+      {
+        if(v[2*i+1]>=v[2*i+2])
+        {
+          swap(i,2*i+1);
+          i = 2*i+1;
+          continue;
+        }
+        else {
+          swap(i,2*i+2);
+          i = 2*i+2;
+          continue;	
+        }
+      }
+      swap(i,2*i+1);
+      i = 2*i + 1;
+    }
+  }
+}
+void MaxPriorityHeap::print(){
+  for(int i=0;i<v.size();i++) cout<<v[i]<<" ";
+}
+void MaxPriorityHeap::insert(int n){
+v.push_back(n);
+  int i=v.size()-1;
+  int j=(v.size()/2)-1;
+  while(i!=0 && v[i]>v[j])
+  {
+    int aux=v[j];
+    v[j]=v[i];
+    v[i]=aux;
+    i=j;
+    if(i%2==0) j=(i/2)-1;
+    else j=i/2;
+  }
+
+}
+int MaxPriorityHeap::extractMax(){
+  if(v.size()>=1) {return v[0];}
+  return -1000;
+}
+int main() {
+  MaxPriorityHeap maxheap;
+}
