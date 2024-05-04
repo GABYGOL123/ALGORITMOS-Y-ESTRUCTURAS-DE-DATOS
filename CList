@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdexcept> 
 using namespace std;
 class CNode{
 public:
@@ -15,12 +16,14 @@ class CList{
 public:
   CNode *Head;
   CNode *Tail;
-  CList(): Head(nullptr), Tail(nullptr){}
+  int size;
+  CList(): Head(nullptr), Tail(nullptr),size(0){}
   void push_back(int);
   void pop_back();
   void push_front(int);
   void pop_front();
-  void print(); 
+  int operator[](int);
+  void print();
 };
 
 void CList::push_back(int v){
@@ -32,6 +35,7 @@ void CList::push_back(int v){
   else{
     Head = Tail = new CNode(v);
   }
+  size++;
 }
 void CList::pop_back(){
   if(Tail){
@@ -44,6 +48,7 @@ void CList::pop_back(){
         delete Head;
         Head = Tail = nullptr;
       }
+    size--;
     
   }
 }
@@ -55,7 +60,8 @@ if(Head){
 }
 else{
   Head = Tail = new CNode(v);
-}
+  }
+  size++;
 }
 void CList::pop_front(){
   if(Head){
@@ -68,6 +74,17 @@ void CList::pop_front(){
         delete Head;
         Head = Tail = nullptr;
       }
+    size--;
+  }
+}
+int CList::operator[](int n){
+  if(n>=0 && n<size){
+    CNode *tmp = Head;
+    for(int i=0; i<n-1; i++) tmp = tmp->next;
+    return tmp->v;
+  }
+  else{
+    throw std::out_of_range("Indice fuera de rango");
   }
 }
 void CList::print(){
@@ -75,12 +92,6 @@ void CList::print(){
 }
 int main() {
   CList list1;
-  for(int i=1;i<=100;i++) list1.push_back(i);
-  for(int i=1;i<=100;i++) list1.push_back(i);
-  for(int i=1;i<=20;i++) list1.pop_back();
-  for(int i=1;i<=20;i++) list1.pop_front();
-  list1.print();
 }
-
 
 
