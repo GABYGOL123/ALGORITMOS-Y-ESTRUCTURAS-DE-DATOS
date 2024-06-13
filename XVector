@@ -1,0 +1,133 @@
+#include <iostream>
+using namespace std;
+class XVector
+{
+public:
+    XVector(int size_map, int size_vec);
+    ~XVector();
+    void push_back(int n);
+    void push_front(int n);
+    int operator[](int n);
+    void expand();
+    int** map;
+    int size_map, size_vec;
+    int size;
+    int** actual;
+    int* actual2;
+};
+
+XVector::XVector(int sm, int sv)
+{
+    size_map = sm;
+    size_vec = sv;
+
+    //inicializamos el mapa
+    map = new int*[size_map];
+    for (int i = 0; i < sm; i++) {
+        map[i] = new int[size_vec];
+    }
+
+    actual = map;
+    actual2 = map[0];
+    size = 0;
+
+}
+
+
+XVector::~XVector()
+{
+    for(int i=0;i<size_map;i++){
+        delete[] map[i];
+    }
+    delete[] map;
+}
+
+void XVector::push_back(int n)
+{
+    if(size == size_map*size_vec){expand();}
+
+    *actual2 = n;
+
+    if(actual2==*actual + size_vec - 1) {actual2 = *(actual + 1);actual++;}
+    else {actual2++;}
+
+    size++;
+}
+
+void XVector::push_front(int n){
+   if(size == size_map*size_vec){expand();}
+  int *aux = nullptr;
+  int *aux2 = actual2;
+  int **aux3 = actual;
+
+  if(aux2==*aux3) aux = *(aux3-1) +size_vec -1;
+  else aux = aux2-1;
+
+  //Posicionamos el actual2
+  if (actual2 == *actual + size_vec-1) {
+
+        actual2 = *(actual + 1);
+        actual++;
+    }
+  else actual2++;
+
+  for(int i=0;i<size;i++){
+    *aux2 = *aux;
+    if(aux2==*aux3) aux3--;
+    aux2 = aux;
+
+    if(i+1!=size){
+        if(aux==*aux3) aux=*(aux3-1)+size_vec - 1;
+        else aux--;
+    }
+  }
+
+  *aux = n;
+  size++;
+
+
+}
+
+int XVector::operator[](int n){
+  int **aux = map + (n/size_vec);
+
+  return *(*aux + (n%size_vec));
+
+}
+
+void print(XVector* p)
+{ //no modificar esta función
+    for (int i = 0; i < p->size; i++)
+        std::cout << (*p)[i] << " ";
+    std::cout << "\n";
+}
+void XVector::expand(){
+    int new_map_size = size_map *2;
+    int **new_map = new int*[new_map_size];
+    for(int i=0;i<new_map_size;i++){
+        new_map[i] = new int[size_vec];
+    }
+
+    //Copiamos el contenido de map a new map
+    for(int i=0;i<size_map;i++){
+        new_map[i] = map[i];
+    }
+
+    //Copiamos los valores actual2 y actual
+    int *Xactual2 = actual2;
+    int **Xactual = actual;
+
+    for(int i=0;i<size_map;i++){
+        delete[] map[i];
+    }
+    delete[] map;
+
+    map = new_map;
+    size_map*=2;
+    actual = Xactual;
+    actual2 = Xactual2;
+}
+int main()
+{
+    XVector v(10, 3);
+}
