@@ -1,0 +1,76 @@
+#include <iostream>
+using namespace std;
+
+class node
+{
+public:
+    node(int _data) : data(_data){}
+    int data;
+    node* next;
+};
+
+class CircularLinkedList
+{
+    node* head=NULL;
+public:
+    void pos(node*&p,node*&q,int n){
+        int i=0;
+        for(q=head;q->data<n;q=q->next){
+            if(q==head) i++;
+            if(i==2) break;
+        }
+        for(p=head;p->next!=q;p=p->next){}
+    }
+    void pos2(node*&p,int n){for(p=head;p->next->data!=n;p=p->next){}}
+    void add(int value){
+        if(head==NULL){
+            head=new node(value);
+            head->next=head;
+        }
+        else if(head->next==head){
+
+            head->next = new node(value);
+            head->next->next = head;
+        }
+        else{
+            node*p=nullptr, *q=nullptr;
+            pos(p,q,value);
+            p->next = new node(value);
+            p->next->next = q;
+            if(q==head && value<head->data){head = p->next;}
+        }
+    }
+    void del(int value)
+    {
+        if(head == head->next){
+            head = nullptr;
+        }
+        else{
+            node *p = nullptr;
+            pos2(p,value);
+            node *aux = p->next;
+            if(value==head->data){head = head->next;}
+            p->next = p->next->next;
+            delete aux;
+        }
+    }
+     void print(){
+        int cont = 0;
+        node* ptr = head;
+        cout << "head->";
+        while (head && cont < 1)
+        {
+            cout << ptr->data<<" -> ";
+            ptr = ptr->next;
+            if (ptr == head) cont++;
+        }
+        if (head) cout << ptr->data;
+        cout<< " <- head \n ";
+
+    }
+};
+
+int main()
+{
+    CircularLinkedList CLL;
+}
